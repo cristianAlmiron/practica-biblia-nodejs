@@ -3,12 +3,16 @@ const { createContainer, asClass, asValue, asFunction } = require('awilix');
 const config = require("../config");
 const app = require(".");
 //services 
-const { HomeService } = require('../services/home.service');
+const { HomeService, CommentService, IdeaService, UserService } = require('../services');
 //controllers
-const { HomeController } = require('../controllers/home.controller');
+const { HomeController, UserController, IdeaController, CommentController } = require('../controllers');
 //routes
-const { HomeRoutes } = require('../routes/index.routes');
+const { HomeRoutes, UserRoutes, IdeaRoutes, CommentRoutes } = require('../routes/index.routes');
 const Routes = require('../routes');
+//models
+const { User, Idea, Comment } = require('../models');
+//repositories
+const { UserRepository, IdeaRepository, CommentRepository } = require('../repositories');
 
 const container = createContainer();
 container.register({
@@ -17,10 +21,27 @@ container.register({
     config: asValue(config),
 }).register({
     HomeService: asClass(HomeService).singleton(),
+    UserService: asClass(UserService).singleton(),
+    CommentService: asClass(CommentService).singleton(),
+    IdeaService: asClass(IdeaService).singleton(),
 }).register({
     HomeController: asClass(HomeController.bind(HomeController)).singleton(),
+    UserController: asClass(UserController.bind(UserController)).singleton(),
+    IdeaController: asClass(IdeaController.bind(IdeaController)).singleton(),
+    CommentController: asClass(CommentController.bind(CommentController)).singleton(),
 }).register({
-    HomeRoutes: asFunction(HomeRoutes.singleton())
+    HomeRoutes: asFunction(HomeRoutes.singleton()),
+    UserRoutes: asFunction(UserRoutes.singleton()),
+    IdeaRoutes: asFunction(IdeaRoutes.singleton()),
+    CommentRoutes: asFunction(CommentRoutes.singleton())
+}).register({
+    User: asValue(User),
+    Idea: asValue(Idea),
+    Comment: asValue(Comment)
+}).register({
+    UserRepository: asClass(UserRepository).singleton(),
+    IdeaRepository: asClass(IdeaRepository).singleton(),
+    CommentRepository: asClass(CommentRepository).singleton(),
 })
 
 module.exports = container;
